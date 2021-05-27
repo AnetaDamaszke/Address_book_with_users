@@ -13,8 +13,7 @@ struct User
     string loginOfUser, passwordOfUser;
 };
 
-void loadDataFromFile(vector<User> &all_users);
-void registrationNewUser(vector<User> &all_users, int &numberOfUsers);
+int registrationNewUser(vector<User> all_users, int numberOfUsers);
 void addNewUserToFile(vector<User> &all_users, User user);
 
 int main()
@@ -23,11 +22,8 @@ int main()
     vector<User> all_users;
 
     int idNumberOfLoggedUser = 0;
+    int numberOfUsers = 0;
     char choiceSign;
-
-    loadDataFromFile(all_users);
-
-    int numberOfUsers = all_users.size();
 
     while(1)
     {
@@ -50,7 +46,8 @@ int main()
             Sleep(1500);
             break;
         case '2':
-            registrationNewUser(all_users, numberOfUsers);
+            numberOfUsers = registrationNewUser(all_users, numberOfUsers);
+            addNewUserToFile(&all_users, user);
             break;
         case '9':
             exit(0);
@@ -64,48 +61,8 @@ int main()
     return 0;
 }
 
-void loadDataFromFile(vector<User> &all_users)
-{
-    string lineOfTextFromFile = "";
-    int elementOfLine = 1;
-    User user;
 
-    fstream plik;
-    plik.open("uzytkownicy.txt", ios::in);
-
-    if(plik.good() == false)
-    {
-        cout << "Nie mozna odznalezc pliku!" << endl;
-    }
-    else
-    {
-        while(getline(plik, lineOfTextFromFile, '|'))
-        {
-            switch(elementOfLine)
-            {
-            case 1:
-                user.idNumberOfUser = atoi(lineOfTextFromFile.c_str());
-                break;
-            case 2:
-                user.loginOfUser = lineOfTextFromFile;
-                break;
-            case 3:
-                user.passwordOfUser = lineOfTextFromFile;
-                break;
-            }
-            if(elementOfLine == 3)
-            {
-                all_users.push_back(user);
-                elementOfLine = 0;
-            }
-
-            elementOfLine++;
-        }
-        plik.close();
-    }
-}
-
-void registrationNewUser(vector<User> &all_users, int &numberOfUsers)
+int registrationNewUser(vector<User> all_users, int numberOfUsers)
 {
     User user;
     string loginOfNewUser, passwordOfNewUser;
@@ -117,7 +74,7 @@ void registrationNewUser(vector<User> &all_users, int &numberOfUsers)
 
     while(i < numberOfUsers)
     {
-        if( loginOfNewUser == all_users[i].loginOfUser )
+        if( users.loginOfUser == loginOfNewUser)
         {
            cout << "Taki uzytkownik juz istnieje. Wpisz inny login: ";
            cin >>  loginOfNewUser;
@@ -137,28 +94,32 @@ void registrationNewUser(vector<User> &all_users, int &numberOfUsers)
     user.passwordOfUser = passwordOfNewUser;
     user.idNumberOfUser = numberOfUsers + 1;
 
-    addNewUserToFile(all_users, user);
-    all_users.push_back(user);
-    numberOfUsers++;
+    cout << "Uzytkownik zarejestrowany!" << endl;
+    Sleep(1500);
+
+    return numberOfUsers + 1;
 }
 
 void addNewUserToFile(vector<User> &all_users, User user)
 {
 
     fstream plik;
-    plik.open("uzytkownicy.txt", ios::out | ios::app);
+    plik.open("ksiazka_adresowa.txt", ios::out | ios::app);
 
     if(plik.good())
     {
-        plik << user.idNumberOfUser << "|";
-        plik << user.loginOfUser << "|";
-        plik << user.passwordOfUser;
+        plik << person.personIdNumber << "|";
+        plik << person.personName << "|";
+        plik << person.personSurname << "|";
+        plik << person.personPhoneNumber << "|";
+        plik << person.personEmail << "|";
+        plik << person.personAddress << "|";
         plik << endl;
 
         plik.close();
 
         cout << endl;
-        cout << "Uzytkownik dodany pomyslnie!" << endl;
+        cout << "Kontakt dodany pomyslnie!" << endl;
         Sleep(1500);
     }
     else

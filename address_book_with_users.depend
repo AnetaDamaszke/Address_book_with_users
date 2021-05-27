@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1622130418 source:c:\users\aneta\desktop\address_book_with_users\address_book_with_users\main.cpp
+	<iostream>
+	<fstream>
+	<conio.h>
+	<windows.h>
+	<string>
+	<vector>
+
