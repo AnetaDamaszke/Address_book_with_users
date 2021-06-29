@@ -27,14 +27,14 @@ void addNewUserToFile(vector<User> &all_users, User user);
 int userLogin(vector<User> &all_users);
 int AdressBookMenu(vector<User> &all_users, int idNumberOfLoggedUser);
 void loadDataFromFile(vector<Person> &all_persons, int &idNumberOfLoggedUser);
-void displayPersonDetails(vector<Person> all_persons, int singleOfContact);
+void displayPersonDetails(Person person);
 void findPersonByName(vector<Person> all_persons);
 void findPersonBySurname(vector<Person> all_persons);
 void showAllContacts(vector<Person> all_persons, Person person);
 void addNewPerson(vector<Person> &all_persons, int &numberOfAllContacts);
-void addToFile(vector<Person> &all_persons, Person person);
+void addToFile(Person person);
 void removePerson(vector<Person> &all_persons, int &numberOfAllContacts);
-void updateContactFromFile(vector<Person> &all_persons, Person person);
+void updateContactFromFile(Person person);
 void editPerson(vector<Person> &all_persons, Person person);
 
 int main()
@@ -59,7 +59,7 @@ void loadDataFromFile(vector<User> &all_users)
     User user;
 
     fstream plik;
-    plik.open("uzytkownicy.txt", ios::in);
+    plik.open("uzytkownicy.txt", ios::in );
 
     if(plik.good() == false)
     {
@@ -162,9 +162,6 @@ void registrationNewUser(vector<User> &all_users, int &numberOfUsers)
     addNewUserToFile(all_users, user);
     all_users.push_back(user);
     numberOfUsers++;
-
-    cout << "Uzytkownik dodany pomyslnie!" << endl;
-    Sleep(1500);
 }
 
 void addNewUserToFile(vector<User> &all_users, User user)
@@ -173,17 +170,24 @@ void addNewUserToFile(vector<User> &all_users, User user)
     fstream plik;
     plik.open("uzytkownicy.txt", ios::out | ios::app);
 
-    if(plik.good())
+    if( plik.good() == true )
     {
         plik << user.idNumberOfUser << "|";
         plik << user.loginOfUser << "|";
         plik << user.passwordOfUser << "|";
         plik << endl;
+        cout << "Uzytkownik dodany pomyslnie!" << endl;
+        Sleep(1500);
 
         plik.close();
     }
     else
+    {
+        cout << endl;
         cout << "Nie mozna odznalezc pliku!" << endl;
+        Sleep(1500);
+    }
+
 }
 
 int userLogin(vector<User> &all_users)
@@ -344,14 +348,14 @@ void loadDataFromFile(vector<Person> &all_persons, int &idNumberOfLoggedUser)
     }
 }
 
-void displayPersonDetails(vector<Person> all_persons, int singleOfContact)
+void displayPersonDetails(Person person)
 {
-    cout << all_persons[singleOfContact].personIdNumber << endl;
-    cout << all_persons[singleOfContact].personName << endl;
-    cout << all_persons[singleOfContact].personSurname << endl;
-    cout << all_persons[singleOfContact].personPhoneNumber << endl;
-    cout << all_persons[singleOfContact].personEmail << endl;
-    cout << all_persons[singleOfContact].personAddress << endl;
+    cout << person.personIdNumber << endl;
+    cout << person.personName << endl;
+    cout << person.personSurname << endl;
+    cout << person.personPhoneNumber << endl;
+    cout << person.personEmail << endl;
+    cout << person.personAddress << endl;
 }
 
 void findPersonByName(vector<Person> all_persons)
@@ -370,7 +374,7 @@ void findPersonByName(vector<Person> all_persons)
     {
         if(personName == all_persons[singleOfContact].personName)
         {
-            displayPersonDetails(all_persons, singleOfContact);
+            displayPersonDetails(all_persons[singleOfContact]);
             searchedName++;
             cout << endl;
         }
@@ -402,7 +406,7 @@ void findPersonBySurname(vector<Person> all_persons)
     {
         if(personSurname == all_persons[singleOfContact].personSurname)
         {
-            displayPersonDetails(all_persons, singleOfContact);
+            displayPersonDetails(all_persons[singleOfContact]);
             searchedSurname++;
             cout << endl;
         }
@@ -428,7 +432,7 @@ void showAllContacts(vector<Person> all_persons, Person person)
 
     for(singleOfContact; singleOfContact < all_persons.size(); singleOfContact++)
     {
-        displayPersonDetails(all_persons, singleOfContact);
+        displayPersonDetails(all_persons[singleOfContact]);
         cout << endl;
     }
 
@@ -486,17 +490,17 @@ void addNewPerson(vector<Person> &all_persons, int &idNumberOfLoggedUser)
     cin.sync();
     getline(cin, person.personAddress);
 
-    addToFile(all_persons, person);
+    addToFile(all_persons[singleOfContact]);
     all_persons.push_back(person);
 }
 
-void addToFile(vector<Person> &all_persons, Person person)
+void addToFile(Person person)
 {
 
     fstream plik;
     plik.open("ksiazka_adresowa.txt", ios::out | ios::app);
 
-    if(plik.good())
+    if( plik.good() == true )
     {
         plik << person.personIdNumber << "|";
         plik << person.userIdNumber << "|";
@@ -514,7 +518,11 @@ void addToFile(vector<Person> &all_persons, Person person)
         Sleep(1500);
     }
     else
+    {
+        cout << endl;
         cout << "Nie mozna odznalezc pliku!" << endl;
+        Sleep(1500);
+    }
 }
 
 void removePerson(vector<Person> &all_persons, int &numberOfAllContacts)
@@ -532,7 +540,7 @@ void removePerson(vector<Person> &all_persons, int &numberOfAllContacts)
     {
         if(all_persons[singleOfContact].personIdNumber == personIdNumberToRemove)
         {
-            displayPersonDetails(all_persons, singleOfContact);
+            displayPersonDetails(all_persons[singleOfContact]);
             cout << endl;
             cout << "Czy na pewno chcesz usunac ten kontakt? t/n" << endl;
             cin >> choiceSign;
@@ -540,7 +548,7 @@ void removePerson(vector<Person> &all_persons, int &numberOfAllContacts)
             if( choiceSign == 't')
             {
                 all_persons.erase(all_persons.begin()+ singleOfContact);
-                updateContactFromFile(all_persons, person);
+                updateContactFromFile(all_persons[singleOfContact]);
                 numberOfAllContacts--;
                 cout << endl;
                 cout << "Kontakt usuniety!" << endl;
@@ -555,7 +563,7 @@ void removePerson(vector<Person> &all_persons, int &numberOfAllContacts)
     }
 }
 
-void updateContactFromFile(vector<Person> &all_persons, Person person)
+void updateContactFromFile(Person person)
 {
     string lineOfText = "", lineOfText2 = "";
     int elementOfLine = 1;
@@ -563,7 +571,7 @@ void updateContactFromFile(vector<Person> &all_persons, Person person)
     fstream plik1, plik2;
     plik1.open("ksiazka_adresowa.txt", ios::in);
 
-    if( plik1.good() )
+    if( plik1.good() == true )
     {
         plik2.open("ksiazka_adresowa_tymczasowa.txt", ios::out | ios::app);
 
@@ -627,12 +635,12 @@ void updateContactFromFile(vector<Person> &all_persons, Person person)
     if(( remove("ksiazka_adresowa.txt") == 0) && ( rename("ksiazka_adresowa_tymczasowa.txt", "ksiazka_adresowa.txt") == 0 ))
     {
         cout << "Aktualizacja danych zakonczona powodzeniem!" << endl;
-        cout << "personIDnumber" << person.personIdNumber << endl;
-        system("pause");
+        Sleep(1500);
     }
     else
     {
         cout << "BLAD ZAPISU!" << endl;
+        Sleep(1500);
     }
 
 }
@@ -652,7 +660,7 @@ void editPerson(vector<Person> &all_persons, Person person)
     {
         if(all_persons[singleOfContact].personIdNumber == personIdNumberToEdit)
         {
-            displayPersonDetails(all_persons, singleOfContact);
+            displayPersonDetails(all_persons[singleOfContact]);
             cout << endl;
             cout << "Czy na pewno chcesz edytowac ten kontakt? t/n" << endl;
             cin >> choiceSign;
@@ -710,10 +718,8 @@ void editPerson(vector<Person> &all_persons, Person person)
                     Sleep(1500);
                 }
 
-                updateContactFromFile(all_persons, person);
-                cout << endl;
-                cout << "Kontakt edytowany!" << endl;
-                Sleep(1500);
+                updateContactFromFile(all_persons[singleOfContact]);
+
             }
             else if( choiceSign == 'n')
             {
