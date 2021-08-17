@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <string>
 #include <vector>
+#include <stdio.h>
 
 using namespace std;
 
@@ -23,7 +24,7 @@ struct Person
 void loadDataFromFile(vector<User> &all_users);
 void userMenu(vector<User> &all_users);
 void registrationNewUser(vector<User> &all_users, int &numberOfUsers);
-void addNewUserToFile(vector<User> &all_users, User user);
+void addNewUserToFile(User user);
 int userLogin(vector<User> &all_users);
 int AdressBookMenu(vector<User> &all_users, int idNumberOfLoggedUser);
 void loadDataFromFile(vector<Person> &all_persons, int &idNumberOfLoggedUser);
@@ -33,9 +34,11 @@ void findPersonBySurname(vector<Person> all_persons);
 void showAllContacts(vector<Person> all_persons, Person person);
 void addNewPerson(vector<Person> &all_persons, int &numberOfAllContacts);
 void addToFile(Person person);
-void removePerson(vector<Person> &all_persons, int &numberOfAllContacts);
+void removePerson(vector<Person> &all_persons, Person person);
 void updateContactFromFile(Person person);
 void editPerson(vector<Person> &all_persons, Person person);
+string findFirstWord(string text);
+void updateContactFromFileRemove(Person person);
 
 int main()
 {
@@ -159,18 +162,17 @@ void registrationNewUser(vector<User> &all_users, int &numberOfUsers)
     user.passwordOfUser = passwordOfNewUser;
     user.idNumberOfUser = numberOfUsers + 1;
 
-    addNewUserToFile(all_users, user);
+    addNewUserToFile(user);
     all_users.push_back(user);
     numberOfUsers++;
 }
 
-void addNewUserToFile(vector<User> &all_users, User user)
+void addNewUserToFile(User user)
 {
-
     fstream plik;
     plik.open("uzytkownicy.txt", ios::out | ios::app);
 
-    if( plik.good() == true )
+    if( plik.good() )
     {
         plik << user.idNumberOfUser << "|";
         plik << user.loginOfUser << "|";
@@ -187,6 +189,7 @@ void addNewUserToFile(vector<User> &all_users, User user)
         cout << "Nie mozna odznalezc pliku!" << endl;
         Sleep(1500);
     }
+
 
 }
 
@@ -276,7 +279,7 @@ int AdressBookMenu(vector<User> &all_users, int idNumberOfLoggedUser)
             showAllContacts(all_persons, person);
             break;
         case '5':
-            removePerson(all_persons, numberOfAllContacts);
+            removePerson(all_persons, person);
             break;
         case '6':
             editPerson(all_persons, person);
@@ -490,7 +493,7 @@ void addNewPerson(vector<Person> &all_persons, int &idNumberOfLoggedUser)
     cin.sync();
     getline(cin, person.personAddress);
 
-    addToFile(all_persons[singleOfContact]);
+    addToFile(person);
     all_persons.push_back(person);
 }
 
@@ -525,9 +528,8 @@ void addToFile(Person person)
     }
 }
 
-void removePerson(vector<Person> &all_persons, int &numberOfAllContacts)
+void removePerson(vector<Person> &all_persons, Person person)
 {
-    Person person;
     int personIdNumberToRemove;
     int singleOfContact = 0;
     char choiceSign;
@@ -547,10 +549,8 @@ void removePerson(vector<Person> &all_persons, int &numberOfAllContacts)
 
             if( choiceSign == 't')
             {
+                updateContactFromFileRemove(all_persons[singleOfContact]);
                 all_persons.erase(all_persons.begin()+ singleOfContact);
-                updateContactFromFile(all_persons[singleOfContact]);
-                numberOfAllContacts--;
-                cout << endl;
                 cout << "Kontakt usuniety!" << endl;
                 Sleep(1500);
             }
@@ -563,54 +563,43 @@ void removePerson(vector<Person> &all_persons, int &numberOfAllContacts)
     }
 }
 
+string findFirstWord(string text)
+{
+    string word;
+
+    char wantedSign = '|';
+
+    int foundPosition = text.find(wantedSign);
+
+    int lenghtOfText = text.size();
+
+    word = text.erase(foundPosition, lenghtOfText - foundPosition);
+
+    return word;
+}
+
 void updateContactFromFile(Person person)
 {
-    string lineOfText = "", lineOfText2 = "";
+    string lineOfTextFromFile = "", partOfLine = "";
     int elementOfLine = 1;
 
     fstream plik1, plik2;
     plik1.open("ksiazka_adresowa.txt", ios::in);
 
-    if( plik1.good() == true )
+    if( plik1.good() )
     {
         plik2.open("ksiazka_adresowa_tymczasowa.txt", ios::out | ios::app);
 
-        while(getline(plik1, lineOfText))
+        while(getline(plik1, lineOfTextFromFile))
         {
-            getline(plik1, lineOfText2, '|');
+            partOfLine = findFirstWord(lineOfTextFromFile);
 
-            if ( person.personIdNumber == atoi(lineOfText2.c_str() ))
+            if( atoi(partOfLine.c_str()) != person.personIdNumber )
             {
-                switch(elementOfLine)
-                {
-                case 1:
-                    person.personIdNumber = atoi(lineOfText2.c_str());
-                    break;
-                case 2:
-                    person.userIdNumber = atoi(lineOfText2.c_str());
-                    break;
-                case 3:
-                    person.personName = lineOfText2;
-                    break;
-                case 4:
-                    person.personSurname = lineOfText2;
-                    break;
-                case 5:
-                    person.personPhoneNumber = lineOfText2;
-                    break;
-                case 6:
-                    person.personEmail = lineOfText2;
-                    break;
-                case 7:
-                    person.personAddress = lineOfText2;
-                    break;
-                }
-                //if ( elementOfLine == 7 )
-                //{
-                //    elementOfLine = 0;
-                //}
-                //elementOfLine++;
-
+                plik2 << lineOfTextFromFile << endl;
+            }
+            else
+            {
                 plik2 << person.personIdNumber << "|";
                 plik2 << person.userIdNumber << "|";
                 plik2 << person.personName << "|";
@@ -620,19 +609,15 @@ void updateContactFromFile(Person person)
                 plik2 << person.personAddress << "|";
                 plik2 << endl;
             }
-            else
-            {
-                plik2 << lineOfText << endl;
-            }
         }
     }
     else
         cout << "Nie znaleziono pliku!" << endl;
 
-    plik1.close();
     plik2.close();
+    plik1.close();
 
-    if(( remove("ksiazka_adresowa.txt") == 0) && ( rename("ksiazka_adresowa_tymczasowa.txt", "ksiazka_adresowa.txt") == 0 ))
+    if(( remove("ksiazka_adresowa.txt") == 0) && ( rename("ksiazka_adresowa_tymczasowa.txt", "ksiazka_adresowa.txt") == 0 ) )
     {
         cout << "Aktualizacja danych zakonczona powodzeniem!" << endl;
         Sleep(1500);
@@ -642,7 +627,49 @@ void updateContactFromFile(Person person)
         cout << "BLAD ZAPISU!" << endl;
         Sleep(1500);
     }
+}
 
+void updateContactFromFileRemove(Person person)
+{
+    string lineOfTextFromFile = "", partOfLine = "";
+
+    fstream plik1, plik2;
+    plik1.open("ksiazka_adresowa.txt", ios::in);
+
+    if( plik1.good() )
+    {
+        plik2.open("ksiazka_adresowa_tymczasowa.txt", ios::out | ios::app);
+
+        while(getline(plik1, lineOfTextFromFile))
+        {
+            partOfLine = findFirstWord(lineOfTextFromFile);
+
+            if( atoi(partOfLine.c_str()) != person.personIdNumber )
+            {
+                plik2 << lineOfTextFromFile << endl;
+            }
+            else
+            {
+                cout << endl;
+            }
+        }
+    }
+    else
+        cout << "Nie znaleziono pliku!" << endl;
+
+    plik2.close();
+    plik1.close();
+
+    if(( remove("ksiazka_adresowa.txt") == 0) && ( rename("ksiazka_adresowa_tymczasowa.txt", "ksiazka_adresowa.txt") == 0 ) )
+    {
+        cout << "Aktualizacja danych zakonczona powodzeniem!" << endl;
+        Sleep(1500);
+    }
+    else
+    {
+        cout << "BLAD ZAPISU!" << endl;
+        Sleep(1500);
+    }
 }
 
 void editPerson(vector<Person> &all_persons, Person person)
