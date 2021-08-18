@@ -27,7 +27,7 @@ void registrationNewUser(vector<User> &all_users, int &numberOfUsers);
 void addNewUserToFile(User user);
 int userLogin(vector<User> &all_users);
 int AdressBookMenu(vector<User> &all_users, int idNumberOfLoggedUser);
-void loadDataFromFile(vector<Person> &all_persons, int &idNumberOfLoggedUser);
+void loadDataFromFile(vector<Person> &all_persons);
 void displayPersonDetails(Person person);
 void findPersonByName(vector<Person> all_persons);
 void findPersonBySurname(vector<Person> all_persons);
@@ -189,8 +189,6 @@ void addNewUserToFile(User user)
         cout << "Nie mozna odznalezc pliku!" << endl;
         Sleep(1500);
     }
-
-
 }
 
 int userLogin(vector<User> &all_users)
@@ -239,9 +237,7 @@ int AdressBookMenu(vector<User> &all_users, int idNumberOfLoggedUser)
     vector<Person> all_persons;
     char choiceSign;
 
-    loadDataFromFile(all_persons, idNumberOfLoggedUser);
-
-    int numberOfAllContacts = all_persons.size();
+    loadDataFromFile(all_persons);
 
     while(1)
     {
@@ -294,7 +290,7 @@ int AdressBookMenu(vector<User> &all_users, int idNumberOfLoggedUser)
     }
 }
 
-void loadDataFromFile(vector<Person> &all_persons, int &idNumberOfLoggedUser)
+void loadDataFromFile(vector<Person> &all_persons)
 {
     string lineOfTextFromFile = "";
     int elementOfLine = 1;
@@ -338,11 +334,7 @@ void loadDataFromFile(vector<Person> &all_persons, int &idNumberOfLoggedUser)
             if ( elementOfLine == 7 )
             {
                 elementOfLine = 0;
-
-                if( person.userIdNumber == idNumberOfLoggedUser )
-                {
-                    all_persons.push_back(person);
-                }
+                all_persons.push_back(person);
             }
 
             elementOfLine++;
@@ -493,8 +485,8 @@ void addNewPerson(vector<Person> &all_persons, int &idNumberOfLoggedUser)
     cin.sync();
     getline(cin, person.personAddress);
 
-    addToFile(person);
     all_persons.push_back(person);
+    addToFile(person);
 }
 
 void addToFile(Person person)
