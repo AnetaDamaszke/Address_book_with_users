@@ -29,9 +29,9 @@ int userLogin(vector<User> &all_users);
 int AdressBookMenu(vector<User> &all_users, int idNumberOfLoggedUser);
 void loadDataFromFile(vector<Person> &all_persons);
 void displayPersonDetails(Person person);
-void findPersonByName(vector<Person> all_persons);
-void findPersonBySurname(vector<Person> all_persons);
-void showAllContacts(vector<Person> all_persons, Person person);
+void findPersonByName(vector<Person> &all_persons, int &numberOfAllContacts);
+void findPersonBySurname(vector<Person> &all_persons, int &numberOfAllContacts);
+void showAllContacts(vector<Person> &all_persons, int &numberOfAllContacts);
 void addNewPerson(vector<Person> &all_persons, int &numberOfAllContacts);
 void addToFile(Person person);
 void removePerson(vector<Person> &all_persons, Person person);
@@ -266,13 +266,13 @@ int AdressBookMenu(vector<User> &all_users, int idNumberOfLoggedUser)
             addNewPerson(all_persons, idNumberOfLoggedUser);
             break;
         case '2':
-            findPersonByName(all_persons);
+            findPersonByName(all_persons, idNumberOfLoggedUser);
             break;
         case '3':
-            findPersonBySurname(all_persons);
+            findPersonBySurname(all_persons, idNumberOfLoggedUser);
             break;
         case '4':
-            showAllContacts(all_persons, person);
+            showAllContacts(all_persons, idNumberOfLoggedUser);
             break;
         case '5':
             removePerson(all_persons, person);
@@ -353,7 +353,7 @@ void displayPersonDetails(Person person)
     cout << person.personAddress << endl;
 }
 
-void findPersonByName(vector<Person> all_persons)
+void findPersonByName(vector<Person> &all_persons, int &idNumberOfLoggedUser)
 {
     Person person;
     string personName;
@@ -367,11 +367,14 @@ void findPersonByName(vector<Person> all_persons)
 
     for(singleOfContact; singleOfContact < all_persons.size(); singleOfContact++)
     {
-        if(personName == all_persons[singleOfContact].personName)
+        if( idNumberOfLoggedUser == all_persons[singleOfContact].userIdNumber)
         {
-            displayPersonDetails(all_persons[singleOfContact]);
-            searchedName++;
-            cout << endl;
+            if(personName == all_persons[singleOfContact].personName)
+            {
+                displayPersonDetails(all_persons[singleOfContact]);
+                searchedName++;
+                cout << endl;
+            }
         }
     }
 
@@ -385,7 +388,7 @@ void findPersonByName(vector<Person> all_persons)
     choiceSign = getch();
 }
 
-void findPersonBySurname(vector<Person> all_persons)
+void findPersonBySurname(vector<Person> &all_persons, int &idNumberOfLoggedUser)
 {
     Person person;
     string personSurname;
@@ -399,11 +402,14 @@ void findPersonBySurname(vector<Person> all_persons)
 
     for(singleOfContact; singleOfContact < all_persons.size(); singleOfContact++)
     {
-        if(personSurname == all_persons[singleOfContact].personSurname)
+        if( idNumberOfLoggedUser == all_persons[singleOfContact].userIdNumber)
         {
-            displayPersonDetails(all_persons[singleOfContact]);
-            searchedSurname++;
-            cout << endl;
+            if(personSurname == all_persons[singleOfContact].personSurname)
+            {
+                displayPersonDetails(all_persons[singleOfContact]);
+                searchedSurname++;
+                cout << endl;
+            }
         }
     }
     if( searchedSurname == 0)
@@ -416,7 +422,7 @@ void findPersonBySurname(vector<Person> all_persons)
     choiceSign = getch();
 }
 
-void showAllContacts(vector<Person> all_persons, Person person)
+void showAllContacts(vector<Person> &all_persons, int &idNumberOfLoggedUser)
 {
     char choiceSign;
     int singleOfContact = 0;
@@ -427,8 +433,11 @@ void showAllContacts(vector<Person> all_persons, Person person)
 
     for(singleOfContact; singleOfContact < all_persons.size(); singleOfContact++)
     {
+        if( idNumberOfLoggedUser == all_persons[singleOfContact].userIdNumber)
+        {
         displayPersonDetails(all_persons[singleOfContact]);
         cout << endl;
+        }
     }
 
     cout << "Aby zakonczyc wcisnij dowolny klawisz";

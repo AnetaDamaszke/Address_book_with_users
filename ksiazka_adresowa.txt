@@ -1,4 +1,5 @@
-1|1|u|k|,|l|i|
-3|2|s|g|h|e|s|
-4|1|d|h|d|r|g|
-5|2|o|s|f|e|s|
+1|1|Bogunio|Linda|777333111|boguslaw@linda.pl|ul. Lotnikow 3a, Warszawa|
+2|1|Radoslaw|Pazura|666333111|radoslaw@pazura.pl|ul. 3 maja 3a, Lodz|
+4|2|Adam|Woronowicz|333111888|adam@woronowicz.pl|ul. Zakonna 5, Bialystok|
+5|1|Jakub|Gierszal|444222777|jakub@gierszal.pl|ul. Zwycieska 4, Warszawa|
+6|2|f|h|k|f|d|
