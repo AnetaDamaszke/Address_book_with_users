@@ -1,5 +1,11 @@
 # depslib dependency file v1.0
-1629303633 source:c:\users\aneta\desktop\address_book_with_users\address_book_with_users\main.cpp
+1631208610 source:c:\users\aneta\desktop\address_book_with_users\address_book_with_users\main.cpp
+	<iostream>
+	<vector>
+	"users.h"
+	"Person.h"
+
+1631208589 c:\users\aneta\desktop\address_book_with_users\address_book_with_users\users.h
 	<iostream>
 	<fstream>
 	<cstdio>
@@ -8,4 +14,36 @@
 	<string>
 	<vector>
 	<stdio.h>
+
+1631208082 source:c:\users\aneta\desktop\address_book_with_users\address_book_with_users\users.cpp
+	<iostream>
+	<fstream>
+	<cstdio>
+	<conio.h>
+	<windows.h>
+	<string>
+	<vector>
+	<stdio.h>
+	"users.h"
+
+1631206794 c:\users\aneta\desktop\address_book_with_users\address_book_with_users\person.h
+	<iostream>
+	<fstream>
+	<cstdio>
+	<conio.h>
+	<windows.h>
+	<string>
+	<vector>
+	<stdio.h>
+
+1631207092 source:c:\users\aneta\desktop\address_book_with_users\address_book_with_users\person.cpp
+	<iostream>
+	<fstream>
+	<cstdio>
+	<conio.h>
+	<windows.h>
+	<string>
+	<vector>
+	<stdio.h>
+	"Person.h"
 
