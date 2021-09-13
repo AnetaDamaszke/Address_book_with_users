@@ -1,0 +1,11 @@
+Address_book_with_users
+bin
+obj
+address_book_with_users.cbp
+address_book_with_users.depend
+address_book_with_users.layout
+ksiazka_adresowa.txt
+main.cpp.save-failed
+Person.cpp.save-failed
+users.cpp.save-failed
+uzytkownicy.txt
